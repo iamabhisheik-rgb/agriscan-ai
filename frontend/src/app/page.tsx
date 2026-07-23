@@ -35,7 +35,7 @@ export default function Home() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await fetch("http://localhost:8000/api/scans/analyze", {
+      const response = await fetch("https://agriscan-backend.onrender.com/api/scans/analyze", {
         method: "POST",
         body: formData,
       });
