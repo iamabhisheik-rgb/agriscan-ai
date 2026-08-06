@@ -58,9 +58,9 @@ export default function Home() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-500 mb-3">
-            AgriScan AI 🌿
-          </h1>
+          <h1 className="text-4xl font-bold text-green-700 mb-4">
+  AgriScan AI 🌿
+</h1>
           <p className="text-lg text-gray-600">
             Upload a photo of your crop to instantly detect pests and diseases.
           </p>
