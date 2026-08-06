@@ -12,8 +12,37 @@ load_dotenv()
 # Load the API key from environment variables
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Initialize the Gemini Vision model
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+def get_best_model():
+    """
+    Automatically finds a working Gemini model available on this API key.
+    """
+    try:
+        # Get a list of all models available for this API key
+        available_models = genai.list_models()
+        
+        # Look for a 1.5 flash model first (fastest)
+        for m in available_models:
+            if 'generateContent' in m.supported_generation_methods:
+                if 'flash' in m.name.lower():
+                    print(f"Found working model: {m.name}")
+                    return genai.GenerativeModel(m.name)
+                    
+        # Fallback to pro if flash isn't found
+        for m in available_models:
+            if 'generateContent' in m.supported_generation_methods:
+                if 'pro' in m.name.lower():
+                    print(f"Found working model: {m.name}")
+                    return genai.GenerativeModel(m.name)
+                    
+    except Exception as e:
+        print(f"Error listing models: {e}")
+        
+    # Absolute fallback
+    return genai.GenerativeModel('gemini-1.5-flash')
+
+# Initialize the best model automatically
+model = get_best_model()
+
 def analyze_plant_image(image_bytes: bytes) -> dict:
     try:
         # Open the image using Pillow
@@ -37,7 +66,6 @@ def analyze_plant_image(image_bytes: bytes) -> dict:
         raw_text = response.text
         
         # Use Regex to extract ONLY the JSON part { ... }
-        # This prevents crashes if Gemini adds conversational text
         json_match = re.search(r'\{.*\}', raw_text, re.DOTALL)
         
         if json_match:
@@ -45,7 +73,6 @@ def analyze_plant_image(image_bytes: bytes) -> dict:
             result_json = json.loads(json_str)
             return result_json
         else:
-            # Fallback if no JSON found
             return {
                 "disease_name": "Unknown",
                 "confidence_score": "N/A",
