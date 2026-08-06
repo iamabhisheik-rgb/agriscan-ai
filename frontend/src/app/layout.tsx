@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 // CHANGE THIS PART:
 export const metadata: Metadata = {
-  title: "AgriScan AI 🌿 | Smart Pest Detection",
+  title: "AgriScan AI 🌿 ",
   description: "AI-powered crop pest and disease detection for modern farmers.",
 };
 
